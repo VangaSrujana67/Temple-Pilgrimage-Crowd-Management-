@@ -1,0 +1,18 @@
+{% extends 'base1.html' %}
+{% block title %}Account Active | SmartPilgrim{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-24 px-4">
+    <div class="max-w-md w-full bg-white p-12 rounded-[2.5rem] border border-gray-100 shadow-2xl text-center">
+        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+            <i class="fa-solid fa-check text-3xl"></i>
+        </div>
+        <h2 class="divine-font text-3xl font-bold text-[#1A5F7A]">Identity Verified</h2>
+        <p class="text-gray-500 font-medium mt-4 mb-10 leading-relaxed">Your pilgrim profile is now active. You may proceed to the temple portal to book your Darshan slots.</p>
+        
+        <a href="{% url 'login' %}" class="btn-glow inline-block w-full py-4 rounded-full font-black uppercase tracking-widest text-xs">
+            Proceed to Login
+        </a>
+    </div>
+</div>
+{% endblock %}

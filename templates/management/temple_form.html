@@ -1,0 +1,67 @@
+{% extends 'base2.html' %}
+{% block title %}{% if temple %}Edit{% else %}Register{% endif %} Temple | Authority{% endblock %}
+{% block header_title %}Sacred Venue Registry{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div class="glass-card p-10 relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 opacity-[0.03] pointer-events-none rotate-12">
+            <i class="fa-solid fa-gopuram text-[300px]"></i>
+        </div>
+
+        <h2 class="divine-font text-3xl font-bold text-[#1A5F7A] mb-8 relative z-10">
+            {% if temple %}Update <span class="text-[#FFC107]">{{ temple.name }}</span>{% else %}Register New Sacred Venue{% endif %}
+        </h2>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-8 relative z-10">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">Temple Name</label>
+                    <input type="text" name="name" value="{{ temple.name|default:'' }}" placeholder="e.g. Kedarnath Temple" required 
+                           class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] focus:bg-white outline-none font-bold text-[#1A5F7A] transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">District</label>
+                    <input type="text" name="district" value="{{ temple.district|default:'' }}" placeholder="e.g. Rudraprayag" required 
+                           class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] focus:bg-white outline-none font-bold text-[#1A5F7A] transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">State Code</label>
+                    <input type="text" name="state" value="{{ temple.state|default:'' }}" maxlength="2" placeholder="AP, TS, TN, KA, etc." required 
+                           class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] focus:bg-white outline-none font-bold text-[#1A5F7A] transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">Presiding Deity</label>
+                    <input type="text" name="deity" value="{{ temple.deity|default:'' }}" placeholder="e.g. Lord Shiva" 
+                           class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] focus:bg-white outline-none font-bold text-[#1A5F7A] transition-all">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">Sacred History / Description</label>
+                <textarea name="description" rows="4" placeholder="Brief history and spiritual significance..." 
+                          class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] focus:bg-white outline-none font-medium text-[#1A5F7A] transition-all">{{ temple.description|default:'' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase text-gray-400 ml-2 tracking-widest">Temple visual (Image)</label>
+                <div class="flex items-center gap-6 p-6 bg-[#F8F9FA] rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#FFC107] transition-all">
+                    <input type="file" name="image" class="text-xs text-gray-400 font-bold">
+                    {% if temple.image %}
+                        <p class="text-[9px] font-black text-[#1A5F7A] uppercase">Current: {{ temple.image.name|truncatechars:15 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-6">
+                <button type="submit" class="flex-1 py-5 bg-[#1A5F7A] text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-2xl hover:bg-[#FFC107] hover:text-[#1A5F7A] transition-all active:scale-95">
+                    {% if temple %}Save Infrastructure Updates{% else %}Complete Registration{% endif %}
+                </button>
+                <a href="{% url 'admin_temple_list' %}" class="px-10 py-5 bg-gray-100 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-gray-200 transition-all flex items-center">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

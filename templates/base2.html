@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portal | SmartPilgrim{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1A5F7A;
+            --accent: #FFC107;
+            --bg-light: #F8F9FA;
+            --sidebar-expanded: 280px;
+            --sidebar-collapsed: 80px;
+        }
+
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-light); overflow-x: hidden; }
+        .divine-font { font-family: 'Lora', serif; }
+
+        #sidebar {
+            width: var(--sidebar-expanded);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--primary);
+        }
+
+        #sidebar.collapsed { width: var(--sidebar-collapsed); }
+        #main-content { transition: margin-left 0.4s ease; }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            margin: 0.5rem 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .collapsed .nav-text, .collapsed .sidebar-header span, .collapsed #sos-btn span, .collapsed .role-header {
+            display: none;
+        }
+
+        .collapsed .nav-item { justify-content: center; padding: 0.85rem 0; border-left-width: 4px; }
+        .collapsed .nav-item i { font-size: 1.25rem; margin-right: 0 !important; }
+
+        .glass-card {
+            background: white;
+            border-radius: 2.5rem;
+            border: 1px solid rgba(26, 95, 122, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(26, 95, 122, 0.08); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex flex-col shadow-2xl overflow-hidden">
+        
+        <button onclick="toggleSidebar()" class="absolute top-6 -right-0 bg-[#FFC107] text-[#1A5F7A] p-2 rounded-l-lg shadow-lg hover:scale-110 transition-transform">
+            <i id="toggle-icon" class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="p-8 mb-6 sidebar-header flex items-center gap-4">
+            <i class="fa-solid fa-gopuram text-3xl text-white"></i>
+            <span class="divine-font text-xl font-bold text-white tracking-tight">SmartPilgrim</span>
+        </div>
+
+        <nav class="flex-1 space-y-2 overflow-y-auto no-scrollbar">
+            {% with request.resolver_match.url_name as url_name %}
+            
+            {% if user.is_authenticated %}
+                {% if user.role == 'admin' %}
+                <div class="role-header px-8 pt-4 pb-2 text-[9px] font-black text-white/40 uppercase tracking-[0.2em]">Authority Command</div>
+                
+                <a href="{% url 'admin_dashboard' %}" class="nav-item {% if url_name == 'admin_dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-gauge-high w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Control Center</span>
+                </a>
+                <a href="{% url 'qr_scanner_page' %}" class="nav-item {% if url_name == 'qr_scanner_page' %}active{% endif %}">
+                    <i class="fa-solid fa-qrcode w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">QR Validator</span>
+                </a>
+                <a href="{% url 'admin_temple_list' %}" class="nav-item {% if url_name == 'admin_temple_list' %}active{% endif %}">
+                    <i class="fa-solid fa-gopuram w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Temple Registry</span>
+                </a>
+                <a href="{% url 'admin_slot_mgmt' %}" class="nav-item {% if url_name == 'admin_slot_mgmt' %}active{% endif %}">
+                    <i class="fa-solid fa-sliders w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Slot Manager</span>
+                </a>
+                <a href="{% url 'admin_sos_monitor' %}" class="nav-item {% if url_name == 'admin_sos_monitor' %}active{% endif %}">
+                    <i class="fa-solid fa-tower-broadcast w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Safety Monitor</span>
+                </a>
+                <a href="{% url 'admin_finance' %}" class="nav-item {% if url_name == 'admin_finance' %}active{% endif %}">
+                    <i class="fa-solid fa-vault w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Financial Reports</span>
+                </a>
+                <div class="my-6 border-t border-white/10 mx-8"></div>
+                {% endif %}
+
+                <div class="role-header px-8 pt-2 pb-2 text-[9px] font-black text-white/40 uppercase tracking-[0.2em]">Devotee Services</div>
+                
+                <a href="{% url 'user_dashboard' %}" class="nav-item {% if url_name == 'user_dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-house-chimney-window w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Dashboard</span>
+                </a>
+                <a href="{% url 'profile_settings' %}" class="nav-item {% if url_name == 'profile_settings' %}active{% endif %}">
+                    <i class="fa-solid fa-user-gear w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">My Profile</span>
+                </a>
+                <a href="{% url 'temple_list' %}" class="nav-item {% if url_name == 'temple_list' or url_name == 'temple_detail' %}active{% endif %}">
+                    <i class="fa-solid fa-om w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Explore Temples</span>
+                </a>
+                <a href="{% url 'my_bookings' %}" class="nav-item {% if url_name == 'my_bookings' or url_name == 'booking_confirmation' %}active{% endif %}">
+                    <i class="fa-solid fa-ticket-simple w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">My Darshans</span>
+                </a>
+                <a href="{% url 'donate_now' %}" class="nav-item {% if url_name == 'donate_now' or url_name == 'contribution_history' %}active{% endif %}">
+                    <i class="fa-solid fa-hand-holding-heart w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Online Dakshan</span>
+                </a>
+                <a href="{% url 'notifications' %}" class="nav-item {% if url_name == 'notifications' %}active{% endif %}">
+                    <i class="fa-solid fa-bell w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Divine Alerts</span>
+                </a>
+                <a href="{% url 'nearby_temples' %}" class="nav-item {% if url_name == 'nearby_temples' %}active{% endif %}">
+                    <i class="fa-solid fa-map-location-dot w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Nearby Temples</span>
+                </a>
+
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-item">
+                    <i class="fa-solid fa-right-to-bracket w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">Login to Portal</span>
+                </a>
+                <a href="{% url 'temple_list' %}" class="nav-item">
+                    <i class="fa-solid fa-om w-8 text-center mr-3"></i>
+                    <span class="nav-text font-bold text-xs uppercase tracking-widest">View Temples</span>
+                </a>
+            {% endif %}
+            {% endwith %}
+        </nav>
+
+        <div class="p-6">
+            <a href="{% url 'trigger_sos' %}" id="sos-btn" class="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl transition-all active:scale-95">
+                <i class="fa-solid fa-circle-exclamation animate-pulse"></i>
+                <span>Emergency SOS</span>
+            </a>
+        </div>
+    </aside>
+
+    <main id="main-content" class="flex-1 ml-[280px] flex flex-col">
+        
+        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-10 sticky top-0 z-40">
+            <h2 class="divine-font text-xl font-bold text-[#1A5F7A]">
+                {% block header_title %}Devotee Portal{% endblock %}
+            </h2>
+            
+            <div class="flex items-center gap-8">
+                {% if user.is_authenticated %}
+                    <div class="hidden md:flex flex-col text-right">
+                        <span class="text-xs font-black text-[#1A5F7A] uppercase">{{ user.full_name|default:user.email }}</span>
+                        <span class="text-[9px] font-bold text-[#FFC107] uppercase tracking-widest">{{ user.role }}</span>
+                    </div>
+                    
+                    <a href="{% url 'profile_settings' %}" class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#1A5F7A] to-[#2A8FB7] flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform overflow-hidden">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <i class="fa-solid fa-user text-white text-sm"></i>
+                        {% endif %}
+                    </a>
+
+                    <a href="{% url 'logout' %}" class="text-gray-300 hover:text-red-500 transition-colors text-lg">
+                        <i class="fa-solid fa-power-off"></i>
+                    </a>
+                {% else %}
+                    <div class="flex gap-4">
+                        <a href="{% url 'login' %}" class="px-6 py-2 bg-[#1A5F7A] text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Login</a>
+                        <a href="{% url 'signup' %}" class="px-6 py-2 border-2 border-[#1A5F7A] text-[#1A5F7A] rounded-xl text-[10px] font-black uppercase tracking-widest">Signup</a>
+                    </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="p-10 flex-1">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer class="p-8 text-center text-gray-400 text-[10px] uppercase tracking-[0.3em]">
+            &copy; 2026 SmartPilgrim Systems | Academic Deployment
+        </footer>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const main = document.getElementById('main-content');
+            const icon = document.getElementById('toggle-icon');
+            
+            sb.classList.toggle('collapsed');
+            if(sb.classList.contains('collapsed')) {
+                main.style.marginLeft = "var(--sidebar-collapsed)";
+                icon.className = "fa-solid fa-chevron-right";
+            } else {
+                main.style.marginLeft = "var(--sidebar-expanded)";
+                icon.className = "fa-solid fa-chevron-left";
+            }
+        }
+    </script>
+
+</body>
+</html>

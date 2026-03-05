@@ -1,0 +1,38 @@
+{% extends 'base2.html' %}
+{% block title %}Dakshan Analytics | Authority{% endblock %}
+{% block header_title %}Financial Audit Ledger{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="bg-[#1A5F7A] rounded-[3rem] p-12 text-white flex justify-between items-center relative overflow-hidden">
+        <div class="relative z-10">
+            <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.3em] mb-2">Total Collection</p>
+            <h2 class="text-5xl font-black">₹ {{ total_dakshan }}</h2>
+        </div>
+        <i class="fa-solid fa-vault text-[120px] opacity-10 absolute right-12"></i>
+    </div>
+
+    <div class="glass-card overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-[#F8F9FA] text-[10px] font-black uppercase text-gray-400 border-b">
+                    <th class="px-8 py-5">Date</th>
+                    <th class="px-8 py-5">Pilgrim</th>
+                    <th class="px-8 py-5">Temple</th>
+                    <th class="px-8 py-5 text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for tx in contributions %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-8 py-6 text-xs font-bold text-gray-500">{{ tx.timestamp|date:"d M, Y" }}</td>
+                    <td class="px-8 py-6 text-sm font-medium">{{ tx.user.email }}</td>
+                    <td class="px-8 py-6 text-sm text-[#1A5F7A] font-bold">{{ tx.temple.name }}</td>
+                    <td class="px-8 py-6 text-right font-black text-[#1A5F7A]">₹ {{ tx.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

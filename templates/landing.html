@@ -1,0 +1,155 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block title %}SmartPilgrim - Seamless Divine Journeys{% endblock %}
+
+{% block content %}
+<section class="relative h-[85vh] flex items-center justify-center overflow-hidden">
+
+    <!-- Background Slider -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-slate-900/50 z-10"></div>
+
+        <div id="heroSlider" class="w-full h-full relative">
+            {% for i in "1234" %}
+                <img src="{% static 'images/temple' %}{{ i }}.jpg"
+                     class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+                     alt="Temple Image">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-20 text-center px-6 max-w-5xl">
+        <div class="inline-block bg-[#FFC107]/20 text-[#FFC107] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-[#FFC107]/30">
+            Powered by Basic AI Crowd Prediction
+        </div>
+
+        <h1 class="divine-font text-5xl md:text-8xl font-bold text-white mb-8 drop-shadow-2xl">
+            Experience the <span class="text-[#FFC107]">Divine</span> with Ease
+        </h1>
+
+        <p class="text-lg md:text-xl text-white/90 font-medium mb-12 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeIn_1s_ease_forwards_0.5s]">
+            Your digital companion for Smart Darshan bookings, real-time crowd forecasting, and interactive temple navigation.
+        </p>
+
+        <div class="bg-white p-3 rounded-2xl md:rounded-full shadow-2xl flex flex-col md:flex-row gap-3 max-w-3xl mx-auto">
+            <form action="{% url 'temple_list' %}" method="GET" class="bg-white p-3 rounded-2xl md:rounded-full shadow-2xl flex flex-col md:flex-row gap-3 max-w-3xl mx-auto w-full relative z-30">
+                <div class="flex-1 flex items-center px-6 gap-4">
+                    <i class="fa-solid fa-magnifying-glass text-[#1A5F7A]"></i>
+                    <input type="text" name="q" placeholder="Search by Temple Name, District, or State..."
+                        class="w-full py-4 outline-none text-gray-700 font-semibold placeholder:text-gray-400 bg-transparent">
+                </div>
+                <button type="submit" class="btn-glow px-12 py-4 rounded-full font-black uppercase tracking-widest text-xs text-white bg-[#1A5F7A]">
+                    Search Temple
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+        <i class="fa-solid fa-chevron-down text-white text-2xl opacity-50"></i>
+    </div>
+</section>
+
+<section id="features" class="py-32 px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div class="max-w-2xl">
+                <h2 class="divine-font text-4xl md:text-5xl font-bold text-[#1A5F7A] mb-6">Smart Solutions for Every Devotee</h2>
+                <div class="h-1.5 w-32 bg-[#FFC107] rounded-full mb-8"></div>
+                <p class="text-gray-500 font-medium">We bridge ancient traditions with modern technology to ensure your spiritual journey is peaceful and organized.</p>
+            </div>
+            <a href="{% url 'signup' %}" class="text-[#1A5F7A] font-black text-xs uppercase tracking-widest flex items-center gap-3 group">
+                Explore All Features <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="p-10 rounded-[40px] border border-gray-100 bg-[#F8F9FA] hover:shadow-2xl transition-all group relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-[#1A5F7A]/5 rounded-full group-hover:scale-150 transition-transform"></div>
+                <div class="w-16 h-16 bg-blue-100 text-[#1A5F7A] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-[#1A5F7A] group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-microchip text-2xl"></i>
+                </div>
+                <h3 class="divine-font text-2xl font-bold mb-4">AI Crowd Prediction</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Predict busy days using festival data, weekends, and historical trends to plan your visit on low-crowd days.</p>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-green-600 uppercase">
+                    <i class="fa-solid fa-circle-check"></i> Real-time Analytics
+                </div>
+            </div>
+
+            <div class="p-10 rounded-[40px] border border-gray-100 bg-[#F8F9FA] hover:shadow-2xl transition-all group relative overflow-hidden">
+                <div class="w-16 h-16 bg-amber-100 text-[#FFC107] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-[#FFC107] group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-qrcode text-2xl"></i>
+                </div>
+                <h3 class="divine-font text-2xl font-bold mb-4">QR Slot Booking</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Secure your Darshan slot (Morning/Afternoon/Night) and receive a unique QR code for verified, queue-free entry.</p>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-amber-600 uppercase">
+                    <i class="fa-solid fa-circle-check"></i> Instant Generation
+                </div>
+            </div>
+
+            <div class="p-10 rounded-[40px] border border-gray-100 bg-[#F8F9FA] hover:shadow-2xl transition-all group relative overflow-hidden">
+                <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-shield-heart text-2xl"></i>
+                </div>
+                <h3 class="divine-font text-2xl font-bold mb-4">Emergency SOS</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Your safety is our priority. One-tap emergency request captures your live location for immediate temple assistance.</p>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-red-600 uppercase">
+                    <i class="fa-solid fa-circle-check"></i> Admin Alerts
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-[#F8F9FA]">
+    <div class="max-w-5xl mx-auto px-8">
+        <div class="bg-[#1A5F7A] rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+            <div class="absolute left-0 top-0 w-full h-full opacity-10 pointer-events-none">
+                <i class="fa-solid fa-dharmachakra text-[400px] -translate-x-1/2 -translate-y-1/2"></i>
+            </div>
+            <h2 class="divine-font text-4xl md:text-5xl font-bold text-white mb-8 relative z-10">Start Your Spiritual Journey Today</h2>
+            <p class="text-white/70 text-lg mb-12 max-w-2xl mx-auto relative z-10 font-medium">Create an account to access smart bookings, contribution history, and real-time navigation tools.</p>
+            <div class="flex flex-wrap justify-center gap-6 relative z-10">
+                <a href="{% url 'signup' %}" class="bg-[#FFC107] text-[#1A5F7A] px-12 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:scale-110 transition-transform shadow-xl">
+                    Create Pilgrim Account
+                </a>
+                <a href="{% url 'login' %}" class="bg-transparent border-2 border-white/30 text-white px-12 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-white hover:text-[#1A5F7A] transition-all">
+                    Login
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- JavaScript Slider -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slides = document.querySelectorAll(".slider-image");
+        let current = 0;
+
+        // Show first image initially
+        slides[current].classList.remove("opacity-0");
+        slides[current].classList.add("opacity-100");
+
+        setInterval(() => {
+            slides[current].classList.remove("opacity-100");
+            slides[current].classList.add("opacity-0");
+
+            current = (current + 1) % slides.length;
+
+            slides[current].classList.remove("opacity-0");
+            slides[current].classList.add("opacity-100");
+        }, 4000); // Change image every 4 seconds
+    });
+</script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

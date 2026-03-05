@@ -1,0 +1,133 @@
+{% extends 'base2.html' %}
+{% block title %}QR Validator | SmartPilgrim{% endblock %}
+{% block header_title %}Entry Point Validation{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-8 animate-in fade-in zoom-in duration-500">
+    
+    <div class="glass-card overflow-hidden">
+        <div class="bg-[#1A5F7A] p-8 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <i class="fa-solid fa-qrcode text-[150px] -rotate-12 translate-x-10"></i>
+            </div>
+            <div class="relative z-10">
+                <h2 class="divine-font text-3xl font-bold text-white mb-2">Gatehouse Validator</h2>
+                <p class="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Live Entry Authentication System</p>
+            </div>
+        </div>
+
+        <div class="p-10 text-center">
+            <div class="mb-10 flex items-center justify-center gap-4 text-[#1A5F7A]">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-sm font-bold">Position QR Code within the frame</p>
+                    <p class="text-[10px] text-gray-400 font-medium">Auto-detection active | 10 FPS Scan Rate</p>
+                </div>
+            </div>
+
+            <div class="relative mx-auto max-w-sm">
+                <div class="absolute -top-2 -left-2 w-8 h-8 border-t-4 border-l-4 border-[#FFC107] z-20 rounded-tl-xl"></div>
+                <div class="absolute -top-2 -right-2 w-8 h-8 border-t-4 border-r-4 border-[#FFC107] z-20 rounded-tr-xl"></div>
+                <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-4 border-l-4 border-[#FFC107] z-20 rounded-bl-xl"></div>
+                <div class="absolute -bottom-2 -right-2 w-8 h-8 border-b-4 border-r-4 border-[#FFC107] z-20 rounded-br-xl"></div>
+
+                <div class="absolute inset-x-0 top-0 h-1 bg-[#FFC107] shadow-[0_0_15px_#FFC107] z-30 animate-scan"></div>
+
+                <div id="reader" class="rounded-[2rem] overflow-hidden border-8 border-[#F8F9FA] shadow-inner bg-black">
+                    </div>
+            </div>
+
+            <div class="mt-10 space-y-6">
+                <div id="scan-status" class="inline-flex items-center gap-3 px-6 py-2 bg-gray-50 rounded-full text-gray-400 text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                    <span class="w-2 h-2 bg-gray-300 rounded-full animate-pulse"></span>
+                    Waiting for camera...
+                </div>
+
+                <div class="flex justify-center gap-6">
+                    <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-[#1A5F7A] transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Exit Scanner
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 bg-[#F8F9FA] border-t border-gray-50 text-center">
+            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">
+                <i class="fa-solid fa-shield-halved mr-2"></i>
+                Validated tokens are instantly marked as 'USED' in the database (Requirement E.5).
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+    /* Scanner View Customization */
+    #reader { border: none !important; }
+    #reader video { border-radius: 1.5rem; object-fit: cover !important; }
+    #reader__dashboard { padding: 20px !important; background: transparent !important; }
+    #reader__dashboard_section_csr button {
+        background: #1A5F7A !important;
+        color: white !important;
+        border: none !important;
+        padding: 10px 20px !important;
+        border-radius: 12px !important;
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        cursor: pointer !important;
+    }
+
+    /* Scanning Laser Animation */
+    @keyframes scan {
+        0% { top: 0%; opacity: 0; }
+        50% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+    .animate-scan {
+        animation: scan 2.5s ease-in-out infinite;
+    }
+</style>
+
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+        // Visual Feedback on Success
+        document.getElementById('scan-status').innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> AUTHENTICATING...';
+        document.getElementById('scan-status').classList.replace('text-gray-400', 'text-green-600');
+        
+        // Short delay to allow visual feedback before redirect
+        setTimeout(() => {
+            window.location.href = `/management/validate/${decodedText}/`;
+        }, 800);
+    }
+
+    function onScanError(errorMessage) {
+        // Errors are normal while searching for QR, we ignore them to keep logs clean
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", 
+        { 
+            fps: 15, 
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0 
+        }
+    );
+    
+    html5QrcodeScanner.render(onScanSuccess, onScanError);
+    
+    // Update status once camera starts
+    setTimeout(() => {
+        const statusEl = document.getElementById('scan-status');
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span> CAMERA ACTIVE - SCANNING';
+            statusEl.classList.replace('text-gray-400', 'text-[#1A5F7A]');
+        }
+    }, 2000);
+</script>
+{% endblock %}

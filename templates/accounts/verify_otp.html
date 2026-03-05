@@ -1,0 +1,24 @@
+{% extends 'base1.html' %}
+{% block title %}Verify Identity | SmartPilgrim{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-24 px-4">
+    <div class="max-w-md w-full bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-2xl text-center">
+        <div class="w-16 h-16 bg-[#FFC107]/20 text-[#FFC107] rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fa-solid fa-paper-plane text-xl"></i>
+        </div>
+        <h2 class="divine-font text-3xl font-bold text-[#1A5F7A]">Verify Email</h2>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 mb-8">Enter the 6-Digit code sent to your inbox</p>
+        
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <input name="otp" type="text" maxlength="6" required placeholder="0 0 0 0 0 0"
+                   class="w-full text-center tracking-[0.8em] text-2xl font-black py-4 bg-[#F8F9FA] border border-gray-100 rounded-2xl focus:ring-4 focus:ring-[#FFC107]/20 outline-none text-[#1A5F7A]">
+            
+            <button type="submit" class="btn-glow w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs">
+                Validate Identity
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

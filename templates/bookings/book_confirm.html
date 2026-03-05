@@ -1,0 +1,179 @@
+{% extends 'base2.html' %}
+{% block title %}Confirm Darshan | SmartPilgrim{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-6 py-12 animate-in fade-in slide-in-from-bottom-10 duration-700">
+    
+    <div class="flex items-center justify-center mb-16">
+        <div class="flex items-center">
+            <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-[#1A5F7A] text-white flex items-center justify-center text-sm font-bold shadow-lg shadow-[#1A5F7A]/20">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <span class="absolute mt-12 text-[10px] font-black text-[#1A5F7A] uppercase tracking-widest">Select</span>
+            </div>
+            <div class="w-24 h-[2px] bg-[#1A5F7A] mx-4 opacity-30"></div>
+            <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-[#FFC107] text-[#1A5F7A] flex items-center justify-center text-sm font-bold shadow-xl shadow-[#FFC107]/20 ring-4 ring-amber-50">
+                    <i class="fa-solid fa-signature"></i>
+                </div>
+                <span class="absolute mt-12 text-[10px] font-black text-[#FFC107] uppercase tracking-widest">Confirm</span>
+            </div>
+            <div class="w-24 h-[2px] bg-gray-200 mx-4"></div>
+            <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <span class="absolute mt-12 text-[10px] font-black text-gray-400 uppercase tracking-widest">Ticket</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[3.5rem] shadow-2xl border border-gray-100 overflow-hidden flex flex-col md:flex-row min-h-[550px]">
+        
+        <div class="md:w-5/12 relative bg-gray-100 flex items-center justify-center">
+            {% if slot.temple.image %}
+                <img src="{{ slot.temple.image.url }}" alt="{{ slot.temple.name }}" class="absolute inset-0 w-full h-full object-cover">
+            {% else %}
+                <div class="text-center p-12">
+                    <i class="fa-solid fa-gopuram text-7xl text-gray-200 mb-4"></i>
+                    <p class="text-[10px] font-black text-gray-300 uppercase">Image Unavailable</p>
+                </div>
+            {% endif %}
+            
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#1A5F7A] via-[#1A5F7A]/60 to-transparent"></div>
+            
+            <div class="absolute inset-0 p-12 flex flex-col justify-between">
+                <div>
+                    <span class="px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-[10px] font-black uppercase tracking-[0.2em]">Verification Pending</span>
+                </div>
+                
+                <div class="text-white">
+                    <p class="text-amber-400 text-xs font-black uppercase tracking-widest mb-2">Sacred Destination</p>
+                    <h2 class="divine-font text-4xl font-bold leading-tight mb-4">{{ slot.temple.name }}</h2>
+                    <div class="flex items-center gap-3 text-sm font-medium text-white/80">
+                        <i class="fa-solid fa-location-dot text-amber-400"></i>
+                        {{ slot.temple.district }}, {{ slot.temple.get_state_display }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden md:block absolute top-0 -right-4 bottom-0 w-8 flex flex-col justify-around py-4 z-20">
+                {% for i in "12345678" %}
+                <div class="w-8 h-8 rounded-full bg-[#F8F9FA] -mr-4"></div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="md:w-7/12 p-12 md:pl-16 bg-white relative">
+            <div class="mb-10">
+                <h3 class="divine-font text-3xl font-bold text-[#1A5F7A] mb-3">Booking Review</h3>
+                <p class="text-gray-400 text-sm">Please confirm your session details before finalizing the darshan pass.</p>
+            </div>
+
+            <div class="space-y-4 mb-10">
+                <div class="flex items-center p-5 bg-[#F8F9FA] rounded-3xl border border-gray-50 group hover:border-[#1A5F7A]/20 transition-all">
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[#1A5F7A] shadow-sm mr-5">
+                        <i class="fa-solid fa-calendar-day"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Planned Date</p>
+                        <p class="font-bold text-[#1A5F7A] text-lg">{{ slot.date|date:"l, d F Y" }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-5 bg-[#F8F9FA] rounded-3xl border border-gray-50 group hover:border-[#1A5F7A]/20 transition-all">
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[#1A5F7A] shadow-sm mr-5">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Time Session</p>
+                        <p class="font-bold text-[#1A5F7A] text-lg">{{ slot.get_slot_type_display }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-5 bg-green-50/50 rounded-3xl border border-green-100">
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-green-600 shadow-sm mr-5">
+                        <i class="fa-solid fa-users-check"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-green-600 uppercase tracking-widest">Real-time Availability</p>
+                        <p id="live-availability" class="font-bold text-[#1A5F7A] text-lg">
+                            {{ slot.available_tickets }} Passes Remaining
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50/80 backdrop-blur-sm p-6 rounded-3xl border-2 border-dashed border-amber-200 mb-10">
+                <div class="flex gap-4">
+                    <i class="fa-solid fa-shield-halved text-[#FFC107] text-xl"></i>
+                    <p class="text-[11px] text-[#1A5F7A] font-bold leading-relaxed">
+                        <b>SECURE ENTRY:</b> Darshan tickets are linked to your profile. A unique QR code will be generated upon confirmation and stored in your digital ledger.
+                    </p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button id="bookBtn" type="submit" class="group relative w-full py-5 bg-[#1A5F7A] text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-2xl hover:bg-[#FFC107] hover:text-[#1A5F7A] transition-all duration-300 transform active:scale-95 overflow-hidden">
+                    <span class="relative z-10 flex items-center justify-center gap-3">
+                        Generate Secure QR Ticket
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </button>
+                
+                <a href="{% url 'temple_detail' slot.temple.id %}" class="block text-center mt-6 text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-xmark mr-2"></i> Cancel & Return to Venue
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <p class="mt-8 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+        Authentication Powered by SmartPilgrim Vision Engine
+    </p>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+        animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
+
+
+<script>
+function updateAvailabilityUI(available) {
+    const el = document.getElementById("live-availability");
+    const btn = document.getElementById("bookBtn");
+
+    if (!el) return;
+
+    el.innerText = available + " Passes Remaining";
+
+    // 🔴 auto-disable when full
+    if (available <= 0 && btn) {
+        btn.disabled = true;
+        btn.classList.add("opacity-50", "cursor-not-allowed");
+        btn.innerText = "Slot Fully Booked";
+    }
+}
+
+// 🔄 poll every 8 seconds (lightweight)
+setInterval(async () => {
+    try {
+        const res = await fetch("{% url 'slot_availability_api' slot.id %}");
+        const data = await res.json();
+        updateAvailabilityUI(data.available);
+    } catch (e) {
+        console.log("Availability refresh failed");
+    }
+}, 8000);
+</script>
+
+{% endblock %}

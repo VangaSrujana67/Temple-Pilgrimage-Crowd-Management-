@@ -1,0 +1,51 @@
+{% extends 'base1.html' %}
+{% load i18n %}
+{% block title %}Login | SmartPilgrim{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-24 px-4 relative overflow-hidden">
+    <div class="absolute top-1/3 left-1/4 w-72 h-72 bg-[#1A5F7A]/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-72 h-72 bg-[#FFC107]/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-md w-full space-y-10 bg-white/80 backdrop-blur-2xl p-10 rounded-[2.5rem] border border-gray-100 shadow-2xl animate-[fadeIn_0.8s_ease]">
+        
+        <div class="text-center">
+            <div class="w-20 h-20 bg-[#1A5F7A]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#1A5F7A]/20 transition-transform hover:rotate-6">
+                <i class="fa-solid fa-gopuram text-3xl text-[#1A5F7A]"></i>
+            </div>
+            <h2 class="divine-font text-3xl font-bold text-[#1A5F7A] tracking-tight">
+                Pilgrim <span class="text-[#FFC107]">Login</span>
+            </h2>
+            <p class="mt-2 text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">
+                Authorized Divine Access
+            </p>
+        </div>
+        
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            <div class="space-y-5">
+                <div class="relative group">
+                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#1A5F7A] transition-colors"></i>
+                    <input name="username" type="email" required placeholder="Registered Email Address"
+                           class="w-full pl-12 pr-4 py-4 bg-[#F8F9FA] border border-gray-100 rounded-xl focus:border-[#1A5F7A]/50 focus:ring-2 focus:ring-[#1A5F7A]/10 outline-none font-medium text-[#2D3436] placeholder-gray-400 transition-all">
+                </div>
+                
+                <div class="relative group">
+                    <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#1A5F7A] transition-colors"></i>
+                    <input id="password" name="password" type="password" required placeholder="Secure Password"
+                           class="w-full pl-12 pr-4 py-4 bg-[#F8F9FA] border border-gray-100 rounded-xl focus:border-[#1A5F7A]/50 focus:ring-2 focus:ring-[#1A5F7A]/10 outline-none font-medium text-[#2D3436] placeholder-gray-400 transition-all">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                <a href="{% url 'password_reset' %}" class="text-gray-400 hover:text-[#1A5F7A] transition underline decoration-[#FFC107]">Forgot Password?</a>
+                <a href="{% url 'signup' %}" class="text-[#FFC107] hover:underline">New Devotee?</a>
+            </div>
+
+            <button type="submit" class="btn-glow w-full py-4 rounded-xl uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 active:scale-95">
+                <i class="fa-solid fa-unlock-keyhole"></i> Login to Sanctuary
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base2.html" %}
+{% block title %}{{ name }} | Live Temple{% endblock %}
+{% block header_title %}Temple Details{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 space-y-8">
+
+    <div class="glass-card p-10 space-y-6">
+
+        <h1 class="divine-font text-4xl font-bold text-[#1A5F7A]">
+            {{ name }}
+        </h1>
+
+        <div class="space-y-2 text-gray-600 font-medium">
+
+            {% if street %}
+                <p><strong>Street:</strong> {{ street }}</p>
+            {% endif %}
+
+            {% if city %}
+                <p><strong>City:</strong> {{ city }}</p>
+            {% endif %}
+
+            <p><strong>Coordinates:</strong> {{ lat }}, {{ lon }}</p>
+
+            {% if wheelchair %}
+                <p><strong>Wheelchair Access:</strong> {{ wheelchair }}</p>
+            {% endif %}
+
+        </div>
+
+        <div class="flex gap-6 pt-4">
+
+            <a href="https://www.google.com/maps/search/?api=1&query={{ lat }},{{ lon }}"
+               target="_blank"
+               class="px-6 py-3 bg-[#1A5F7A] text-white rounded-xl font-bold text-xs uppercase tracking-widest">
+               Open in Google Maps
+            </a>
+
+            {% if wikipedia %}
+                <a href="https://en.wikipedia.org/wiki/{{ wikipedia|cut:'en:' }}"
+                   target="_blank"
+                   class="px-6 py-3 border-2 border-[#1A5F7A] text-[#1A5F7A] rounded-xl font-bold text-xs uppercase tracking-widest">
+                   Wikipedia
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

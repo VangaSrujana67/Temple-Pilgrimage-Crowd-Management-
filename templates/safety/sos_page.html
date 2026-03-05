@@ -1,0 +1,136 @@
+{% extends 'base2.html' %}
+{% block title %}Emergency SOS | SmartPilgrim{% endblock %}
+{% block header_title %}Emergency Response{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-8 animate-in fade-in zoom-in duration-500">
+    
+    <div class="glass-card overflow-hidden border-t-[12px] border-red-600 shadow-2xl shadow-red-100">
+        
+        <div class="p-10 text-center bg-red-50/30">
+            <div class="w-24 h-24 bg-red-600 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-200 animate-pulse">
+                <i class="fa-solid fa-truck-medical text-4xl"></i>
+            </div>
+            <h2 class="divine-font text-4xl font-bold text-red-600 mb-2">Emergency Assistance</h2>
+            <p class="text-gray-400 text-[10px] font-black uppercase tracking-[0.3em]">Direct link to Temple Command Center</p>
+        </div>
+
+        <div class="p-10 md:p-16">
+            <form method="POST" id="sosForm" class="space-y-10 relative z-10">
+                {% csrf_token %}
+                
+                <input type="hidden" name="lat" id="id_lat">
+                <input type="hidden" name="lng" id="id_lng">
+
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Type of Emergency</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="relative flex items-center p-5 bg-red-50/50 border-2 border-transparent rounded-3xl cursor-pointer hover:bg-red-50 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-white group">
+                            <input type="radio" name="issue_type" value="MEDICAL" class="hidden" checked>
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-red-600 mr-4 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </div>
+                            <span class="font-bold text-[#1A5F7A] text-sm">Medical Help</span>
+                        </label>
+
+                        <label class="relative flex items-center p-5 bg-red-50/50 border-2 border-transparent rounded-3xl cursor-pointer hover:bg-red-50 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-white group">
+                            <input type="radio" name="issue_type" value="CROWD" class="hidden">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-red-600 mr-4 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-people-group"></i>
+                            </div>
+                            <span class="font-bold text-[#1A5F7A] text-sm">Crowd Panic</span>
+                        </label>
+
+                        <label class="relative flex items-center p-5 bg-red-50/50 border-2 border-transparent rounded-3xl cursor-pointer hover:bg-red-50 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-white group">
+                            <input type="radio" name="issue_type" value="SAFETY" class="hidden">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-red-600 mr-4 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-shield-exclamation"></i>
+                            </div>
+                            <span class="font-bold text-[#1A5F7A] text-sm">Safety Threat</span>
+                        </label>
+
+                        <label class="relative flex items-center p-5 bg-red-50/50 border-2 border-transparent rounded-3xl cursor-pointer hover:bg-red-50 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-white group">
+                            <input type="radio" name="issue_type" value="LOST" class="hidden">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-red-600 mr-4 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-person-circle-question"></i>
+                            </div>
+                            <span class="font-bold text-[#1A5F7A] text-sm">Missing Person</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Exact Location / Details (Optional)</label>
+                    <textarea name="message" rows="3" placeholder="e.g. Near the main entrance, wearing a blue shirt..." 
+                              class="w-full px-8 py-6 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-red-500 focus:bg-white outline-none font-medium transition-all"></textarea>
+                </div>
+
+                <div id="geo-status" class="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 transition-all">
+                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-300" id="geo-icon">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </div>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest" id="geo-text">Establishing GPS Lock...</p>
+                </div>
+
+                <button type="button" onclick="getLocationAndSubmit()" id="sos-submit"
+                        class="group relative w-full py-6 bg-red-600 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] text-xs shadow-2xl shadow-red-200 hover:bg-red-700 transition-all active:scale-95 overflow-hidden">
+                    <span class="relative z-10 flex items-center justify-center gap-3">
+                        Broadcast SOS Alert
+                        <i class="fa-solid fa-tower-broadcast group-hover:scale-125 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                </button>
+            </form>
+        </div>
+
+        <div class="p-6 bg-red-50 border-t border-red-100 text-center">
+            <p class="text-[9px] text-red-400 font-bold uppercase tracking-[0.2em] leading-relaxed">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                Misuse of SOS may lead to account suspension. Use only in real emergencies.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Requirement H.3: Geolocation Capture
+    window.onload = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('id_lat').value = pos.coords.latitude;
+                    document.getElementById('id_lng').value = pos.coords.longitude;
+                    updateGeoStatus(true);
+                },
+                (err) => { updateGeoStatus(false); }
+            );
+        }
+    }
+
+    function updateGeoStatus(success) {
+        const icon = document.getElementById('geo-icon');
+        const text = document.getElementById('geo-text');
+        const container = document.getElementById('geo-status');
+
+        if(success) {
+            icon.classList.replace('text-gray-300', 'text-green-500');
+            text.innerHTML = "GPS Signal Locked - Precision Enabled";
+            text.classList.replace('text-gray-400', 'text-green-600');
+            container.classList.replace('bg-gray-50', 'bg-green-50/50');
+        } else {
+            icon.classList.replace('text-gray-300', 'text-red-400');
+            text.innerHTML = "GPS Failed - Using Network Location";
+            text.classList.replace('text-gray-400', 'text-red-500');
+        }
+    }
+
+    function getLocationAndSubmit() {
+        const btn = document.getElementById('sos-submit');
+        btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-3"></i> BROADCASTING...';
+        btn.disabled = true;
+
+        // Ensure form submits even if GPS lock isn't finished
+        document.getElementById('sosForm').submit();
+    }
+</script>
+{% endblock %}

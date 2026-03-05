@@ -1,0 +1,57 @@
+{% extends 'base2.html' %}
+{% block title %}{% if slot %}Edit{% else %}Create{% endif %} Slot | Authority{% endblock %}
+{% block header_title %}Session Capacity Override{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto animate-in fade-in duration-700">
+    <div class="glass-card p-10">
+        <h2 class="divine-font text-3xl font-bold text-[#1A5F7A] mb-8">
+            {% if slot %}Modify Slot: {{ slot.date }}{% else %}Initialize New Darshan Session{% endif %}
+        </h2>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Temple Venue</label>
+                    <select name="temple" required class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] outline-none font-bold text-[#1A5F7A]">
+                        {% for t in temples %}
+                            <option value="{{ t.id }}" {% if slot.temple.id == t.id %}selected{% endif %}>{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Darshan Date</label>
+                    <input type="date" name="date" value="{{ slot.date|date:'Y-m-d' }}" required class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] outline-none font-bold text-[#1A5F7A]">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Session Type</label>
+                    <select name="slot_type" required class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] outline-none font-bold text-[#1A5F7A]">
+                        <option value="MORNING" {% if slot.slot_type == 'MORNING' %}selected{% endif %}>Morning (6 AM - 11 AM)</option>
+                        <option value="AFTERNOON" {% if slot.slot_type == 'AFTERNOON' %}selected{% endif %}>Afternoon (12 PM - 4 PM)</option>
+                        <option value="EVENING" {% if slot.slot_type == 'EVENING' %}selected{% endif %}>Evening (5 PM - 9 PM)</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Maximum Capacity</label>
+                    <input type="number" name="max_capacity" value="{{ slot.max_capacity }}" required class="w-full px-6 py-4 bg-[#F8F9FA] rounded-2xl border-2 border-transparent focus:border-[#FFC107] outline-none font-bold text-[#1A5F7A]">
+                </div>
+            </div>
+
+            <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 mb-6">
+                <p class="text-[10px] text-[#1A5F7A] font-bold leading-relaxed">
+                    <i class="fa-solid fa-circle-info mr-2"></i>
+                    <b>Capacity Note:</b> Increasing capacity will immediately update available tickets. Decreasing capacity below the number of current bookings is not recommended as it may cause system conflicts.
+                </p>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" class="flex-1 py-4 bg-[#1A5F7A] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl hover:bg-[#FFC107] hover:text-[#1A5F7A] transition-all">
+                    {% if slot %}Update Session{% else %}Add Session to Calendar{% endif %}
+                </button>
+                <a href="{% url 'admin_slot_mgmt' %}" class="px-8 py-4 bg-gray-100 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-gray-200 transition-all">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

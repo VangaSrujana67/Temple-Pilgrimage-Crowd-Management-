@@ -1,0 +1,84 @@
+{% extends 'base2.html' %}
+{% block title %}Slot Controller | Authority{% endblock %}
+{% block header_title %}Session Capacity Control{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-700">
+    
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="divine-font text-3xl font-bold text-[#1A5F7A]">Session Calendar</h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Manage and override darshan availability</p>
+        </div>
+        <a href="{% url 'admin_slot_add' %}" class="px-6 py-3 bg-[#FFC107] text-[#1A5F7A] rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 transition-transform flex items-center gap-2">
+            <i class="fa-solid fa-calendar-plus"></i> Initialize New Session
+        </a>
+    </div>
+
+    <div class="glass-card overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-[#F8F9FA] text-[10px] font-black uppercase text-gray-400 border-b">
+                    <th class="px-8 py-5">Darshan Date</th>
+                    <th class="px-8 py-5">Sacred Venue</th>
+                    <th class="px-8 py-5">Session Type</th>
+                    <th class="px-8 py-5">Availability Log (Booked/Total)</th>
+                    <th class="px-8 py-5 text-right">Operational Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for slot in slots %}
+                <tr class="hover:bg-amber-50/10 transition-colors group">
+                    <td class="px-8 py-6">
+                        <p class="font-bold text-[#1A5F7A] text-sm">{{ slot.date|date:"d M, Y" }}</p>
+                        <p class="text-[9px] text-gray-400 font-black uppercase">{{ slot.date|date:"l" }}</p>
+                    </td>
+                    
+                    <td class="px-8 py-6 text-sm font-medium text-gray-600">{{ slot.temple.name }}</td>
+                    
+                    <td class="px-19 py-6">
+                        <span class="px-1 py-1 bg-amber-50 text-[#FFC107] rounded-lg text-[9px] font-black uppercase tracking-tighter border border-amber-100">
+                            {{ slot.get_slot_type_display }}
+                        </span>
+                    </td>
+                    
+                    <td class="px-8 py-6">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-black text-[#1A5F7A]">{{ slot.available_tickets }}</span>
+                            <span class="text-gray-300 text-xs">/</span>
+                            <span class="text-xs text-gray-400 font-bold">{{ slot.max_capacity }}</span>
+                            <div class="hidden md:block w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden ml-4">
+                                <div class="h-full bg-[#1A5F7A]" style="width: {% widthratio slot.available_tickets slot.max_capacity 100 %}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <td class="px-8 py-6 text-right">
+                        <div class="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <a href="{% url 'admin_slot_edit' slot.pk %}" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all shadow-sm">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </a>
+                            <a href="{% url 'admin_slot_delete' slot.pk %}" 
+                               onclick="return confirm('CRITICAL: Are you sure you want to delete this darshan session? All associated bookings may be affected.')" 
+                               class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-24 text-center">
+                        <div class="max-w-xs mx-auto">
+                            <i class="fa-solid fa-calendar-xmark text-4xl text-gray-100 mb-4"></i>
+                            <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest">No darshan sessions scheduled.</p>
+                            <a href="{% url 'admin_slot_add' %}" class="mt-4 inline-block text-[#1A5F7A] underline font-black text-[10px]">Initialize First Session</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

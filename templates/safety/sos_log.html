@@ -1,0 +1,99 @@
+{% extends 'base2.html' %}
+{% block title %}Emergency Log | SmartPilgrim{% endblock %}
+{% block header_title %}Safety Ledger{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto py-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
+    
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+        <div>
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-black text-[#1A5F7A] uppercase tracking-[0.3em]">Personal Safety Monitor</span>
+            </div>
+            <h2 class="divine-font text-4xl font-bold text-[#1A5F7A]">Emergency History</h2>
+            <p class="text-gray-400 font-medium mt-1">Tracking your SOS alerts and authority response status.</p>
+        </div>
+        
+        <a href="{% url 'trigger_sos' %}" class="group px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 transition-all active:scale-95 flex items-center gap-3">
+            <i class="fa-solid fa-circle-exclamation group-hover:rotate-12 transition-transform"></i>
+            Trigger New SOS
+        </a>
+    </div>
+
+    <div class="space-y-6">
+        {% for log in logs %}
+        <div class="glass-card group overflow-hidden border-l-8 {% if log.status == 'PENDING' %}border-l-red-500{% else %}border-l-green-500{% endif %}">
+            <div class="p-8 flex flex-col lg:flex-row items-center justify-between gap-8">
+                
+                <div class="flex items-start gap-6 flex-1">
+                    <div class="w-16 h-16 rounded-[1.5rem] flex-shrink-0 flex items-center justify-center 
+                        {% if log.status == 'PENDING' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-600{% endif %} shadow-inner">
+                        <i class="fa-solid {% if log.status == 'PENDING' %}fa-tower-broadcast animate-pulse{% else %}fa-check-double{% endif %} text-2xl"></i>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-3">
+                            <h3 class="font-bold text-[#1A5F7A] text-xl">{{ log.get_issue_type_display }}</h3>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-400 text-[8px] font-black rounded-lg uppercase tracking-tighter">Ref: #{{ log.id|add:"1000" }}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 font-medium italic leading-relaxed">"{{ log.message|truncatechars:100 }}"</p>
+                        <div class="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-50">
+                            <span class="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase">
+                                <i class="fa-solid fa-calendar-day text-[#1A5F7A]"></i> {{ log.created_at|date:"D, d M Y" }}
+                            </span>
+                            <span class="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase">
+                                <i class="fa-solid fa-clock text-[#1A5F7A]"></i> {{ log.created_at|date:"H:i A" }}
+                            </span>
+                            {% if log.latitude %}
+                            <span class="flex items-center gap-2 text-[10px] font-bold text-[#1A5F7A] uppercase">
+                                <i class="fa-solid fa-location-crosshairs text-red-500"></i> Geolocation Captured
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-48 text-center lg:text-right space-y-4">
+                    <div class="inline-block px-6 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest
+                        {% if log.status == 'PENDING' %}bg-red-100 text-red-600 shadow-sm shadow-red-100{% else %}bg-green-100 text-green-600 shadow-sm shadow-green-100{% endif %}">
+                        {{ log.status }}
+                    </div>
+                    
+                    {% if log.status == 'PENDING' %}
+                    <p class="text-[9px] text-red-400 font-bold uppercase animate-pulse">Authority Notified</p>
+                    {% else %}
+                    <p class="text-[9px] text-green-500 font-bold uppercase">Incident Resolved</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="glass-card text-center py-32 bg-[#F8F9FA]/50 border-2 border-dashed border-gray-200">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <i class="fa-solid fa-shield-heart text-gray-200 text-4xl"></i>
+            </div>
+            <h3 class="divine-font text-2xl font-bold text-gray-300">Secure & Safe</h3>
+            <p class="text-gray-400 font-medium mt-2">No emergency alerts have been triggered by your account.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-16 p-8 bg-[#1A5F7A] rounded-[3rem] text-white relative overflow-hidden group">
+        <div class="absolute right-0 bottom-0 opacity-5 translate-x-10 translate-y-10 group-hover:translate-x-5 transition-transform duration-700">
+            <i class="fa-solid fa-user-shield text-[200px]"></i>
+        </div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+            <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-3xl">
+                <i class="fa-solid fa-circle-info text-[#FFC107]"></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="divine-font text-xl font-bold mb-1">Incident Response Protocol</h4>
+                <p class="text-white/60 text-xs leading-relaxed max-w-2xl font-medium">
+                    Every SOS alert is routed directly to the Temple Command Center. Response times vary based on the issue type selected. For non-life-threatening issues, please contact the temple information desk.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
